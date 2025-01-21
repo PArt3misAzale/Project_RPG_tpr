@@ -6,13 +6,14 @@ import com.azale.engine.Renderer;
 import com.azale.engine.gfx.ImageTile;
 import com.azale.game.entities.player.Player;
 import com.azale.game.entitystats.EntityStats;
-
-import java.awt.event.KeyEvent;
+import com.azale.game.inventory.Inventory;
+import com.azale.game.objects.items.ItemFireGem;
 
 public class GameManager extends AbstractGame {
 
     private int cursorX, cursorY;
     // GAME //
+    int FPS = 0;
     // PLAYER
     Player player;
     // STATS
@@ -29,6 +30,10 @@ public class GameManager extends AbstractGame {
     EntityStats magicalDefense;
     EntityStats luck;
     EntityStats magic;
+
+    Inventory playerInventory;
+
+    ItemFireGem ITEMFIREGEM;
 
     public GameManager() {
 
@@ -51,6 +56,11 @@ public class GameManager extends AbstractGame {
         this.luck = new EntityStats("luck");
         this.magic = new EntityStats("magic");
 
+        this.playerInventory = new Inventory(60, 50); // nbSlots to redefine
+
+        this.ITEMFIREGEM = new ItemFireGem(1, "Fire Gem");
+        this.playerInventory.slots[0].setItemIn(ITEMFIREGEM);
+
     }
 
 
@@ -59,6 +69,12 @@ public class GameManager extends AbstractGame {
 
         cursorX = gc.getInput().getMouseX();
         cursorY = gc.getInput().getMouseY();
+
+        FPS++;
+        if(FPS%30 == 1) {
+            this.playerInventory.slots[0].addItems(1);
+            this.playerInventory.consoleOutNb(0);
+        }
 
     }
 
