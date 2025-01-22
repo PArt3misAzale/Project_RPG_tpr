@@ -32,6 +32,7 @@ public class GameManager extends AbstractGame {
     EntityStats magic;
 
     Inventory playerInventory;
+    Boolean inventoryOpen = true;
 
     ItemFireGem ITEMFIREGEM;
 
@@ -67,13 +68,14 @@ public class GameManager extends AbstractGame {
     @Override
     public void update(GameContainer gc, float dt) {
 
-        cursorX = gc.getInput().getMouseX();
-        cursorY = gc.getInput().getMouseY();
+        updateCursorPosition(gc);
 
         FPS++;
         if(FPS%30 == 1) {
-            this.playerInventory.slots[0].addItems(1);
+            this.playerInventory.slots[0].addItems(2);
             this.playerInventory.consoleOutNb(0);
+            this.playerInventory.slots[0].getItemIn().consoleOut();
+            System.out.println(this.playerInventory.slots[0].getReturnedAddItems());
         }
 
     }
@@ -82,14 +84,50 @@ public class GameManager extends AbstractGame {
     public void render(GameContainer gc, Renderer r) {
 
         // PLAYER
-        gc.renderer.drawImage(player.getImage(), player.getX(), player.getY());
+        drawPlayer(this.player, gc);
 
         // UI
+        if (inventoryOpen) { drawInventory(gc); }
 
         // ON ALL THINGS
+        drawFpsAndMouseCoordinates(gc);
+
+    }
+
+    public void updateCursorPosition(GameContainer gc) {
+        this.cursorX = gc.getInput().getMouseX();
+        this.cursorY = gc.getInput().getMouseY();
+    }
+
+    public void updatePlayerPosition(Player player) {
+
+    }
+
+    public void drawPlayer(Player player, GameContainer gc) {
+        gc.renderer.drawImage(player.getImage(), player.getX(), player.getY());
+    }
+
+    public void drawInventory(GameContainer gc) {
+        gc.renderer.drawfillRect(0, 0, gc.getWidth(), gc.getHeight(), 0xac9170);
+        // inventory
+        gc.renderer.drawfillRect(25, 20, 235, 30, 0xff0000);
+        gc.renderer.drawfillRect(265, 20, 235, 30, 0x00ff00);
+        gc.renderer.drawfillRect(505, 20, 235, 30, 0x0000ff);
+        gc.renderer.drawfillRect(745, 20, 235, 30, 0x00ffff);
+        gc.renderer.drawfillRect(20, 50, 965, 820, 0xffffff);
+        for (int x = 0; x < 10; x++) {
+            for (int y = 0; y < 8; y++) {
+                gc.renderer.drawfillRect(29 + x * 95, 60 + y * 101, 90, 90, 0xff00ff);
+            }
+        }
+
+        // equipment
+        gc.renderer.drawfillRect(1000, 30, 580, 840, 0x000000);
+    }
+
+    public void drawFpsAndMouseCoordinates(GameContainer gc) {
         gc.renderer.drawText6P("FPS : " + gc.fps, 0, 0, 0xff00ffff);
         gc.renderer.drawText6P("Mouse coordinates : ( " + cursorX + " ; " + cursorY + " )",0, 10, 0xff00ffff);
-
     }
 
     public static void main(String[] args) {

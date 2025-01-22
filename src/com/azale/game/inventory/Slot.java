@@ -8,18 +8,20 @@ public class Slot {
     int maxQuantity;
     Item item;
 
+    int returnedAddItems;
+
     public Slot(int maxQuantity) { this.maxQuantity = maxQuantity; }
 
     public void setItemIn(Item itemIn){ this.item = itemIn; }
     public Item getItemIn() { return this.item; }
 
-    public int addItems(int quantity) {
-        if (this.quantity + quantity > maxQuantity) {
-            int addedQuantity = maxQuantity - this.quantity;
-            this.quantity += addedQuantity;
-            quantity -= addedQuantity;
-            return quantity;
-        } else { return 0; }
+    public void addItems(int quantity) {
+        returnedAddItems = 0;
+        if (this.quantity + quantity <= this.maxQuantity) {
+            this.quantity += quantity;
+        } else {
+            returnedAddItems = -(this.maxQuantity - (this.quantity + quantity));
+        }
     }
 
     public int subItems(int quantity) {
@@ -30,6 +32,8 @@ public class Slot {
         }
 
     }
+
+    public int getReturnedAddItems() { return returnedAddItems; }
 
     public boolean isEmpty() {
         if (quantity == 0) { return true; }
